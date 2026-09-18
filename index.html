@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Squares, Cubes, and Roots Practice</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f4f6f8;color:#17202a}header{background:#26384a;color:white;padding:24px}
+main{max-width:960px;margin:auto;padding:20px}.card{background:white;padding:18px;margin:14px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.note{background:#eef2f5;padding:12px;border-radius:8px}
+.choice{display:block;width:100%;text-align:left;padding:10px;margin:6px 0;border:0;border-radius:7px;background:#edf1f5;cursor:pointer}
+.good{background:#d9f2df}.bad{background:#f8d7da}.bar{position:sticky;bottom:0;background:white;border-top:1px solid #bbb;padding:12px}
+input{padding:8px;width:110px}button{padding:8px 12px;border-radius:7px;border:1px solid #bbb;cursor:pointer}
+</style></head><body><header><h1>Squares, Cubes, and Roots</h1><p>Mathematics 600 Fundamentals - Interactive Practice</p></header><main>
+<div class="card"><h2>Quick Notes</h2><div class="grid">
+<div class="note"><b>Square</b><br>n² = n × n</div><div class="note"><b>Cube</b><br>n³ = n × n × n</div>
+<div class="note"><b>Square Root</b><br>Find the number that squares to make N.</div><div class="note"><b>Cube Root</b><br>Find the number that cubes to make N.</div>
+<div class="note"><b>Inverse Operations</b><br>Squaring ↔ square root<br>Cubing ↔ cube root</div></div></div>
+<div class="card"><h2>Power & Root Explorer</h2><p>Enter a whole number from 1 to 12.</p>
+<input id="n" type="number" min="1" max="12"><button onclick="explore()">Explore</button><p id="out"></p></div>
+<div id="quiz"></div>
+<div class="bar">
+  <b id="score">Questions answered: 0 / 20</b>
+  <button id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
+  <button onclick="resetQ()">Reset Quiz</button>
+  <div id="finalResult" style="margin-top:10px;font-weight:bold"></div>
+</div></main>
+<script>const qs=[{"q": "1. What is 7 squared?", "opts": ["14", "21", "49", "343"], "a": 2}, {"q": "2. What is 4 cubed?", "opts": ["8", "16", "32", "64"], "a": 3}, {"q": "3. Which number is a perfect square?", "opts": ["18", "50", "81", "32"], "a": 2}, {"q": "4. Which number is NOT a perfect cube?", "opts": ["729", "225", "512", "125"], "a": 1}, {"q": "5. Which number is both a perfect square and a perfect cube?", "opts": ["16", "81", "1,000", "64"], "a": 3}, {"q": "6. Which equation is true?", "opts": ["6^3 = 18", "11^2 = 121", "8^2 = 16", "5^3 = 25"], "a": 1}, {"q": "7. What is the square root of 49?", "opts": ["5", "6", "7", "8"], "a": 2}, {"q": "8. What is the square root of 16?", "opts": ["2", "4", "8", "16"], "a": 1}, {"q": "9. What is the cube root of 64?", "opts": ["2", "3", "4", "8"], "a": 2}, {"q": "10. What is the cube root of 1,000?", "opts": ["10", "20", "100", "333"], "a": 0}, {"q": "11. Squaring and taking the square root are:", "opts": ["equal operations", "inverse operations", "unrelated operations", "division operations"], "a": 1}, {"q": "12. Cubing and taking the cube root are:", "opts": ["inverse operations", "addition operations", "the same operation", "subtraction operations"], "a": 0}, {"q": "13. Which is the inverse of multiplication?", "opts": ["addition", "subtraction", "division", "cubing"], "a": 2}, {"q": "14. Which is the inverse of addition?", "opts": ["subtraction", "division", "square root", "cubing"], "a": 0}, {"q": "15. Is 196 a perfect square?", "opts": ["Yes, because 14^2 = 196", "Yes, because 196 / 2 = 98", "No", "Only a perfect cube"], "a": 0}, {"q": "16. What is the square root of 144?", "opts": ["10", "11", "12", "14"], "a": 2}, {"q": "17. What is the cube root of 27?", "opts": ["2", "3", "6", "9"], "a": 1}, {"q": "18. What is the cube root of 1,728?", "opts": ["10", "11", "12", "18"], "a": 2}, {"q": "19. What is the square root of 100?", "opts": ["5", "10", "20", "50"], "a": 1}, {"q": "20. Which statement is correct?", "opts": ["Square root means divide by 2", "Cube root means divide by 3", "A square root is a number that squares to give the original number", "Roots are not related to powers"], "a": 2}];let score=0,answered=0;
+function render(){let r=document.getElementById('quiz');r.innerHTML='';qs.forEach((x,i)=>{let d=document.createElement('div');d.className='card';d.innerHTML=`<h3>${x.q}</h3><div class="opts"></div><div class="fb"></div>`;x.opts.forEach((o,j)=>{let b=document.createElement('button');b.className='choice';b.textContent=String.fromCharCode(65+j)+'. '+o;b.onclick=()=>check(d,b,i,j);d.querySelector('.opts').appendChild(b)});r.appendChild(d)});update()}
+function check(d,b,i,j){
+  if(d.dataset.submitted)return;
+  d.dataset.selected=j;
+  let bs=[...d.querySelectorAll('.choice')];
+  bs.forEach(z=>z.style.outline='');
+  b.style.outline='3px solid #26384a';
+  update();
+}
+function update(){
+  answered=[...document.querySelectorAll('#quiz .card')].filter(d=>d.dataset.selected!==undefined).length;
+  document.getElementById('score').textContent=`Questions answered: ${answered} / ${qs.length}`;
+}
+function submitQuiz(){
+  let cards=[...document.querySelectorAll('#quiz .card')];
+  answered=cards.filter(d=>d.dataset.selected!==undefined).length;
+  if(answered<qs.length){
+    document.getElementById('finalResult').textContent=`Please answer all ${qs.length} questions before submitting. You have answered ${answered}.`;
+    return;
+  }
+  score=0;
+  cards.forEach((d,i)=>{
+    d.dataset.submitted=1;
+    let selected=Number(d.dataset.selected);
+    let bs=[...d.querySelectorAll('.choice')];
+    bs[qs[i].a].classList.add('good');
+    if(selected===qs[i].a){
+      score++;
+      d.querySelector('.fb').textContent='Correct!';
+    } else {
+      bs[selected].classList.add('bad');
+      d.querySelector('.fb').textContent=`Incorrect. Correct answer: ${String.fromCharCode(65+qs[i].a)}. ${qs[i].opts[qs[i].a]}`;
+    }
+    bs.forEach(z=>z.disabled=true);
+  });
+  let pct=Math.round(score/qs.length*100);
+  document.getElementById('score').textContent=`Final Score: ${score} / ${qs.length} (${pct}%)`;
+  document.getElementById('finalResult').textContent=`Quiz submitted! Your score is ${score} out of ${qs.length} (${pct}%).`;
+  document.getElementById('submitBtn').disabled=true;
+}
+function resetQ(){
+  score=0;answered=0;
+  document.getElementById('finalResult').textContent='';
+  document.getElementById('submitBtn').disabled=false;
+  render();scrollTo(0,0);
+}
+function explore(){let n=Number(document.getElementById('n').value),o=document.getElementById('out');if(!Number.isInteger(n)||n<1||n>12){o.textContent='Enter a whole number from 1 to 12.';return}o.innerHTML=`${n}² = ${n*n}<br>${n}³ = ${n*n*n}<br>√${n*n} = ${n}<br>∛${n*n*n} = ${n}`;}
+render();</script></body></html>
